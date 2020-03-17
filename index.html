@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+	<title>Курсы НБУ + React</title>
+  
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  </head>
+  <body>
+	<div class="container mt-5 mb-5">
+		
+	</div>
+ 
+  </body>
+  <script type="text/babel">
+	(async function(){
+
+
+
+		function Record(props){
+			return 	<tr>
+						<td>{props.currency.txt}</td>
+						<td>{props.currency.cc}</td>
+						<td>{props.currency.rate}</td>
+					</tr>
+		}
+
+
+
+		function App(props){
+
+			let [search, setSearch] = React.useState("");
+			let [date, setDate] = React.useState(props.date);
+
+						return <React.Fragment>
+
+			<h1>Курсы НБУ</h1>	
+		
+			<div className="row">
+				<div className="col-md-6">
+					<div className="form-group">
+					<label htmlFor="ratesByDate">Дата</label>
+					<input type="date" className="form-control" id="ratesByDate" onInput={ e => {
+					setDate(e.target.value.split('-').join(""));
+					}
+					}/>
+					</div>
+				</div>
+				<div className="col-md-6">
+					<div className="form-group">
+					<label htmlFor="ratesSearch">Поиск</label>
+					<input type="text" className="form-control" id="ratesSearch" placeholder="Например: доллар" onInput={ e => setSearch(e.target.value) }/>
+					</div>
+				</div>
+			</div>
+			
+			<table className="table mt-4">
+				<thead>
+					<tr>
+					<th>Название</th>
+					<th>Код</th>
+					<th>Курс</th>
+					</tr>
+				</thead>
+				<tbody>
+				
+
+					{ props.records.filter(item => item.txt.toLowerCase().includes(search.toLowerCase())).map(item => <Record key={item.cc} currency={item}/> )}
+				
+					
+				</tbody>
+			
+			</table>
+
+						</React.Fragment>
+
+		}
+
+	let url = `https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=20200316&json`
+
+	let data = await fetch(url);
+	data 	 = await data.json();
+	data 	 = data;
+	console.log(data);
+	
+	let root = document.querySelector(".container")
+
+	ReactDOM.render(<App records={data}/>, root);
+
+	})();
+
+
+  </script>
+</html>
